@@ -72,8 +72,8 @@ static void usage(char *prog_name, char *message)
     puts("    -a : Absolute time (default is zero-based)");
     puts("    -b : Buffered output (default is unbuffered)");
     puts("    -h : Help (show this message and exit)");
-    puts("    -z (zero-based) and -u (unbuffered) options are accepted");
-    puts("       for compatibility with older versions.");
+    puts("    -z : Zero-based time (redundant, this is the default)");
+    puts("    -u : Unbuffered output (redundant, this is the default)");
     puts("    -o file : Print output to specified file");
     exit(EXIT_SUCCESS);
 } /* usage */
