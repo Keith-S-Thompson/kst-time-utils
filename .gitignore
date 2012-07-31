@@ -1,0 +1,5 @@
+*.o
+clock_gettime
+gettimeofday
+jd
+timer
