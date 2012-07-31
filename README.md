@@ -25,12 +25,12 @@ of a day or 86.4 microseconds.
 
 `timer` is more complex.  `timer -h` shows the following help message:
 
-    Usage: timer [options]
+    Usage: ./timer [options]
         -a : Absolute time (default is zero-based)
         -b : Buffered output (default is unbuffered)
         -h : Help (show this message and exit)
-        -z (zero-based) and -u (unbuffered) options are accepted
-           for compatibility with older versions.
+        -z : Zero-based time (redundant, this is the default)
+        -u : Unbuffered output (redundant, this is the default)
         -o file : Print output to specified file
 
 It reads from stdin and write to stdout, prepending a timestamp to
