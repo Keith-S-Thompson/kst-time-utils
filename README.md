@@ -9,14 +9,26 @@ it's actually that accurate.  The time to run the program and display
 the output is likely to exceed one microsecond.
 
 `gettimeofday` is a simple wrapper around the
-[gettimeofday](http://linuxmanpages.com/man2/gettimeofday.2.php)
+[`gettimeofday`](http://linuxmanpages.com/man2/gettimeofday.2.php)
 function.  It prints the current time, in seconds since the epoch,
 to microsecond precision.
 
-`clock_gettime` is a simple wrapper around the
-[clock_gettime](http://linuxmanpages.com/man3/clock_gettime.3.php)
-function, called with `CLOCK_REALTIME`.  It's similar to
+`clock_gettime` is a wrapper around the
+[`clock_gettime`](http://linuxmanpages.com/man3/clock_gettime.3.php)
+function.  With no arguments, it shows the result of calling
+`clock_gettime`, called with `CLOCK_REALTIME`; this is similar to
 `gettimeofday`, but it prints the current time to nanosecond precision.
+Other options are as shown with `-h`:
+
+    Usage: clock_gettime [options]
+        -r CLOCK_REALTIME, system-wide real-time clock
+        -m CLOCK_MONOTONIC, monotonic time since some unspecified starting point
+        -M CLOCK_MONOTONIC_RAW, hardware-based timer with no ntp adjustments
+        -p CLOCK_PROCESS_CPUTIME_ID, high-resolution per-process timer from the CPU
+        -t CLOCK_THREAD_CPUTIME_ID, thread-specific CPU-time clock
+    (-p and -t are not particularly meaningful in this context.)
+    Multiple arguments may be given
+    With no arguments, show CLOCK_REALTIME
 
 `jd` uses the `gettimeofday` function, but it displays the current
 [Julian day](http://en.wikipedia.org/wiki/Julian_day),  The value is
@@ -38,4 +50,4 @@ that level.)
 It reads from stdin and writes to stdout, prepending a timestamp to
 each line.  Like the `time` command, it lets you see how long a progmam
 takes to execute, but unlike `time` it shows timing information for
-each line of ouput.
+each line of ouput (and doesn't show CPU time).
