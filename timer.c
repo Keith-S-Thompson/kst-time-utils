@@ -5,6 +5,7 @@
 #include <sys/time.h>
 
 static int absolute = 0;
+static int relative = 0;
 static int buffered = 0;
 static struct timeval t0;
 static int t0_initialized = 0;
@@ -55,6 +56,9 @@ static void show_time(FILE *stream, int real_time_too)
                 fprintf(stream, "]");
             }
         }
+        if (relative) {
+            t0 = tv;
+        }
     }
     else {
         fprintf(stream, "---------.------");
@@ -70,6 +74,7 @@ static void usage(char *prog_name, char *message)
     }
     printf("Usage: %s [options]\n", prog_name);
     puts("    -a : Absolute time (default is zero-based)");
+    puts("    -r : Show time interval relative to previous line");
     puts("    -b : Buffered output (default is unbuffered)");
     puts("    -h : Help (show this message and exit)");
     puts("    -z : Zero-based time (redundant, this is the default)");
@@ -92,6 +97,9 @@ int main(int argc, char **argv)
     for (i = 1; i < argc; i ++) {
         if (strcmp(argv[i], "-a") == 0) {
             absolute = 1;
+        }
+        else if (strcmp(argv[i], "-r") == 0) {
+            relative = 1;
         }
         else if (strcmp(argv[i], "-z") == 0) {
             absolute = 0;
@@ -119,6 +127,10 @@ int main(int argc, char **argv)
             sprintf(message, "Unrecognized argument: \"%s\"", argv[i]);
             usage(argv[0], message);
         }
+    }
+
+    if (absolute && relative) {
+        usage(argv[0], "Options -a and -r are incompatible");
     }
 
     if (output_file_name != NULL) {

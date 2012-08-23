@@ -21,19 +21,21 @@ function, called with `CLOCK_REALTIME`.  It's similar to
 `jd` uses the `gettimeofday` function, but it displays the current
 [Julian day](http://en.wikipedia.org/wiki/Julian_day),  The value is
 printed to 9 decimal places, which gives a precision of 1 billionth
-of a day or 86.4 microseconds.
+of a day or 86.4 microseconds.  (This doesn't imply *accuracy* to
+that level.)
 
 `timer` is more complex.  `timer -h` shows the following help message:
 
     Usage: ./timer [options]
         -a : Absolute time (default is zero-based)
+        -r : Show time interval relative to previous line
         -b : Buffered output (default is unbuffered)
         -h : Help (show this message and exit)
         -z : Zero-based time (redundant, this is the default)
         -u : Unbuffered output (redundant, this is the default)
         -o file : Print output to specified file
 
-It reads from stdin and write to stdout, prepending a timestamp to
+It reads from stdin and writes to stdout, prepending a timestamp to
 each line.  Like the `time` command, it lets you see how long a progmam
 takes to execute, but unlike `time` it shows timing information for
 each line of ouput.
