@@ -1,6 +1,6 @@
 PROGRAMS = clock_gettime gettimeofday jd timer
 
-CC = gcc -O3
+CC = gcc -O3 -std=c99
 
 all:	        $(PROGRAMS)
 
