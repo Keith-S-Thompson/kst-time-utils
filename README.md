@@ -31,10 +31,12 @@ Other options are as shown with `-h`:
     With no arguments, show CLOCK_REALTIME
 
 `jd` uses the `gettimeofday` function, but it displays the current
-[Julian day](http://en.wikipedia.org/wiki/Julian_day),  The value is
-printed to 9 decimal places, which gives a precision of 1 billionth
-of a day or 86.4 microseconds.  (This doesn't imply *accuracy* to
-that level.)
+[Julian date](http://en.wikipedia.org/wiki/Julian_day).
+`jd -m` prints the [Modified Julian
+Date](http://en.wikipedia.org/wiki/Julian_day#Alternatives).
+The value is printed to 9 decimal places, which gives a precision
+of 1 billionth of a day or 86.4 microseconds.  (This doesn't imply
+*accuracy* to that level.)
 
 `timer` is more complex.  `timer -h` shows the following help message:
 
