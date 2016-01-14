@@ -10,12 +10,12 @@
 static int show_time(clockid_t clk_id) {
     struct timespec ts = { 0, 0 };
     if (clock_gettime(clk_id, &ts) == 0) {
-	printf("%ld.%09ld\n", (long)ts.tv_sec, (long)ts.tv_nsec);
+        printf("%ld.%09ld\n", (long)ts.tv_sec, (long)ts.tv_nsec);
         return 1;
     }
     else {
-	perror("clock_gettime");
-	return 0;
+        perror("clock_gettime");
+        return 0;
     }
 }
 

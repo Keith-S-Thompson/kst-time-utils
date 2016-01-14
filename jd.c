@@ -28,8 +28,8 @@ int main(int argc, char **argv) {
     long double unix_time;
     long double jd;
     if (gettimeofday(&tp, NULL) != 0) {
-	perror("gettimeofday");
-	exit(EXIT_FAILURE);
+        perror("gettimeofday");
+        exit(EXIT_FAILURE);
     }
     unix_time = tp.tv_sec + tp.tv_usec/1000000.0;
     jd = unix_time / 86400.0 + (modified ? 40587.0 : 2440587.5);
