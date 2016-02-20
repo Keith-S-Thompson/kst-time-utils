@@ -14,9 +14,8 @@ static void usage_error(char *program_name) {
 }
 
 int main(int argc, char **argv) {
-    int i;
     int modified = 0; /* use Modified Julian Date */
-    for (i = 1; i < argc; i ++) {
+    for (int i = 1; i < argc; i ++) {
         if (strcmp(argv[i], "-m") == 0) {
             modified = 1;
         }
@@ -25,14 +24,12 @@ int main(int argc, char **argv) {
         }
     }
     struct timeval tp;
-    long double unix_time;
-    long double jd;
     if (gettimeofday(&tp, NULL) != 0) {
         perror("gettimeofday");
         exit(EXIT_FAILURE);
     }
-    unix_time = tp.tv_sec + tp.tv_usec/1000000.0;
-    jd = unix_time / 86400.0 + (modified ? 40587.0 : 2440587.5);
+    const long double unix_time = tp.tv_sec + tp.tv_usec/1000000.0;
+    const long double jd = unix_time / 86400.0 + (modified ? 40587.0 : 2440587.5);
     printf("%.9Lf\n", jd);
     return 0;
 }
