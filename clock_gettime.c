@@ -21,7 +21,7 @@ static int show_time(clockid_t clk_id) {
 
 static void usage(void) {
     puts("Usage: clock_gettime [options]");
-    puts("  -r    CLOCK_REALTIME, system-wide real-time clock");
+    puts("  -r    CLOCK_REALTIME, system-wide real-time clock (default)");
     puts("  -m    CLOCK_MONOTONIC, monotonic time since some unspecified starting point");
 #ifdef CLOCK_MONOTONIC_RAW
     puts("  -M    CLOCK_MONOTONIC_RAW, hardware-based timer with no ntp adjustments");
@@ -30,7 +30,6 @@ static void usage(void) {
     puts("  -t    CLOCK_THREAD_CPUTIME_ID, thread-specific CPU-time clock");
     puts("(-p and -t are not particularly meaningful in this context.)");
     puts("Multiple arguments may be given");
-    puts("With no arguments, show CLOCK_REALTIME");
     exit(EXIT_SUCCESS);
 }
 
