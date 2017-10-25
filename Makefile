@@ -1,4 +1,4 @@
-PROGRAMS = clock_gettime gettimeofday jd timer
+PROGRAMS = clock_gettime gettimeofday jd timer usleep-until
 
 CC = gcc -O3 -std=c99
 
@@ -12,6 +12,7 @@ test:	all
 	./gettimeofday
 	./jd
 	( echo hello ; sleep 1 ; echo good-bye ) | ./timer
+	./usleep-until 1
 
 clean:
 	- rm -f *.o $(PROGRAMS)

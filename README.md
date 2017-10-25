@@ -40,7 +40,7 @@ of 1 billionth of a day or 86.4 microseconds.  (This doesn't imply
 
 `timer` is more complex.  `timer -h` shows the following help message:
 
-    Usage: ./timer [options]
+    Usage: timer [options]
         -a : Absolute time (default is zero-based)
         -r : Show time interval relative to previous line
         -b : Buffered output (default is unbuffered)
@@ -53,3 +53,10 @@ It reads from stdin and writes to stdout, prepending a timestamp to
 each line.  Like the `time` command, it lets you see how long a progmam
 takes to execute, but unlike `time` it shows timing information for
 each line of ouput (and doesn't show CPU time).
+
+`usleep-until` sleeps until the next multiple (in seconds since
+the UNIX epoch) of the specified number of seconds.  It uses
+`gettimeofday()` and `usleep()` to provide microsecond resolution
+(subject to the overhead of running the program).
+
+    Usage: usleep-until seconds
