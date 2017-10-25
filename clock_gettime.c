@@ -5,7 +5,20 @@
 #include <stddef.h>
 #include <string.h>
 #include <time.h>
+#include <stdbool.h>
 /* #include <sys/time.h> */
+
+static int show_res(clockid_t clk_id) {
+    struct timespec ts = { 0, 0 };
+    if (clock_getres(clk_id, &ts) == 0) {
+        printf("%ld.%09ld\n", (long)ts.tv_sec, (long)ts.tv_nsec);
+        return 1;
+    }
+    else {
+        perror("clock_getres");
+        return 0;
+    }
+}
 
 static int show_time(clockid_t clk_id) {
     struct timespec ts = { 0, 0 };
@@ -17,6 +30,10 @@ static int show_time(clockid_t clk_id) {
         perror("clock_gettime");
         return 0;
     }
+}
+
+static int show(clockid_t clk_id, bool res) {
+    (res ? show_res : show_time)(clk_id);
 }
 
 static void usage(void) {
@@ -34,28 +51,32 @@ static void usage(void) {
 }
 
 int main(int argc, char **argv) {
-    int ok = 1;
+    bool ok = 1;
+    int res = 0;
 
     if (argc > 1) {
         for (int i = 1; i < argc; i ++) {
             if (strlen(argv[i]) == 2 && argv[i][0] == '-') {
                 switch (argv[i][1]) {
+                    case 'R':
+                        res = 1;
+                        break;
                     case 'r':
-                        show_time(CLOCK_REALTIME);
+                        show(CLOCK_REALTIME, res);
                         break;
                     case 'm':
-                        show_time(CLOCK_MONOTONIC);
+                        show(CLOCK_MONOTONIC, res);
                         break;
 #ifdef CLOCK_MONOTONIC_RAW
                     case 'M':
-                        show_time(CLOCK_MONOTONIC_RAW);
+                        show(CLOCK_MONOTONIC_RAW, res);
                         break;
 #endif
                     case 'p':
-                        show_time(CLOCK_PROCESS_CPUTIME_ID);
+                        show(CLOCK_PROCESS_CPUTIME_ID, res);
                         break;
                     case 't':
-                        show_time(CLOCK_THREAD_CPUTIME_ID);
+                        show(CLOCK_THREAD_CPUTIME_ID, res);
                         break;
                     default:
                         usage();
@@ -68,7 +89,7 @@ int main(int argc, char **argv) {
         }
     }
     else {
-        ok = ok && show_time(CLOCK_REALTIME);
+        ok = ok && show(CLOCK_REALTIME, res);
     }
 
     exit(ok ? EXIT_SUCCESS : EXIT_FAILURE);
