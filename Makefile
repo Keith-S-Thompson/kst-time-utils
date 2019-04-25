@@ -1,6 +1,6 @@
 PROGRAMS = clock_gettime gettimeofday jd timer usleep-until
 
-CC = gcc -O3 -std=c99
+CC = gcc -O3 -std=c11
 
 all:	        $(PROGRAMS)
 
