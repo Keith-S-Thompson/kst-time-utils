@@ -57,6 +57,20 @@ each line of ouput (and doesn't show CPU time).
 `usleep-until` sleeps until the next multiple (in seconds since
 the UNIX epoch) of the specified number of seconds.  It uses
 `gettimeofday()` and `usleep()` to provide microsecond resolution
-(subject to the overhead of running the program).
+(subject to the overhead of running the program).  Note that
+these functions are considered obsolete.  Consider using the
+`nanosleep-until` command instead.
 
     Usage: usleep-until seconds
+
+`nanosleep-until` sleeps until the next multiple (in seconds since
+the UNIX epoch) of the specified number of seconds.  It uses
+`clock_gettime()` and `nanosleep()` to provide nanosecond resolution
+(subject to the overhead of running the program).
+
+The `seconds` argument is a positive integer.  Since `nanosleep-until`
+uses `atoi` to parse its argument, any fractional part is quietly
+ignored; `nanosleep-until 1.5` acts like `nanosleep 1`.  (This is a
+bug, which I'll fix eventually.)
+
+    Usage: nanosleep-until seconds
