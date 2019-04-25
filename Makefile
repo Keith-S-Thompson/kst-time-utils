@@ -1,4 +1,4 @@
-PROGRAMS = clock_gettime gettimeofday jd timer usleep-until
+PROGRAMS = clock_gettime gettimeofday jd timer usleep-until nanosleep-until
 
 CC = gcc -O3 -std=c11
 
