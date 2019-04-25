@@ -33,7 +33,7 @@ static int show_time(clockid_t clk_id) {
 }
 
 static int show(clockid_t clk_id, bool res) {
-    (res ? show_res : show_time)(clk_id);
+    return (res ? show_res : show_time)(clk_id);
 }
 
 static void usage(void) {
@@ -58,9 +58,6 @@ int main(int argc, char **argv) {
         for (int i = 1; i < argc; i ++) {
             if (strlen(argv[i]) == 2 && argv[i][0] == '-') {
                 switch (argv[i][1]) {
-                    case 'R':
-                        res = 1;
-                        break;
                     case 'r':
                         show(CLOCK_REALTIME, res);
                         break;
