@@ -8,31 +8,34 @@
 #include <stdbool.h>
 /* #include <sys/time.h> */
 
-static int show_res(clockid_t clk_id) {
+static bool show_res(clockid_t clk_id) {
+    // puts(">>> show_res");
     struct timespec ts = { 0, 0 };
     if (clock_getres(clk_id, &ts) == 0) {
         printf("%ld.%09ld\n", (long)ts.tv_sec, (long)ts.tv_nsec);
-        return 1;
+        return true;
     }
     else {
         perror("clock_getres");
-        return 0;
+        return false;
     }
 }
 
-static int show_time(clockid_t clk_id) {
+static bool show_time(clockid_t clk_id) {
+    // puts(">>> show_time");
     struct timespec ts = { 0, 0 };
     if (clock_gettime(clk_id, &ts) == 0) {
         printf("%ld.%09ld\n", (long)ts.tv_sec, (long)ts.tv_nsec);
-        return 1;
+        return true;
     }
     else {
         perror("clock_gettime");
-        return 0;
+        return false;
     }
 }
 
-static int show(clockid_t clk_id, bool res) {
+static bool show(clockid_t clk_id, bool res) {
+    // puts(">>> show");
     return (res ? show_res : show_time)(clk_id);
 }
 
@@ -46,47 +49,57 @@ static void usage(void) {
     puts("  -p    CLOCK_PROCESS_CPUTIME_ID, high-resolution per-process timer from the CPU");
     puts("  -t    CLOCK_THREAD_CPUTIME_ID, thread-specific CPU-time clock");
     puts("(-p and -t are not particularly meaningful in this context.)");
+    puts("  -R    Show resolution (calls clock_getres), may be followed by other options");
     puts("Multiple arguments may be given");
     exit(EXIT_SUCCESS);
 }
 
 int main(int argc, char **argv) {
-    bool ok = 1;
-    int res = 0;
+    bool ok = true;
+    bool show_res = false;
+    bool shown = false;
 
-    if (argc > 1) {
-        for (int i = 1; i < argc; i ++) {
-            if (strlen(argv[i]) == 2 && argv[i][0] == '-') {
-                switch (argv[i][1]) {
-                    case 'r':
-                        show(CLOCK_REALTIME, res);
-                        break;
-                    case 'm':
-                        show(CLOCK_MONOTONIC, res);
-                        break;
+    for (int i = 1; i < argc; i ++) {
+        if (strlen(argv[i]) == 2 && argv[i][0] == '-') {
+            switch (argv[i][1]) {
+                case 'R':
+                    // puts(">>> show_res = true");
+                    show_res = true;
+                    break;
+                case 'r':
+                    ok = ok && show(CLOCK_REALTIME, show_res);
+                    shown = true;
+                    break;
+                case 'm':
+                    ok = ok && show(CLOCK_MONOTONIC, show_res);
+                    shown = true;
+                    break;
 #ifdef CLOCK_MONOTONIC_RAW
-                    case 'M':
-                        show(CLOCK_MONOTONIC_RAW, res);
-                        break;
+                case 'M':
+                    ok = ok && show(CLOCK_MONOTONIC_RAW, show_res);
+                    shown = true;
+                    break;
 #endif
-                    case 'p':
-                        show(CLOCK_PROCESS_CPUTIME_ID, res);
-                        break;
-                    case 't':
-                        show(CLOCK_THREAD_CPUTIME_ID, res);
-                        break;
-                    default:
-                        usage();
-                        break;
-                }
-            }
-            else {
-                usage();
+                case 'p':
+                    ok = ok && show(CLOCK_PROCESS_CPUTIME_ID, show_res);
+                    shown = true;
+                    break;
+                case 't':
+                    ok = ok && show(CLOCK_THREAD_CPUTIME_ID, show_res);
+                    shown = true;
+                    break;
+                default:
+                    usage();
+                    break;
             }
         }
+        else {
+            usage();
+        }
     }
-    else {
-        ok = ok && show(CLOCK_REALTIME, res);
+
+    if (!shown) {
+        ok = ok && show(CLOCK_REALTIME, show_res);
     }
 
     exit(ok ? EXIT_SUCCESS : EXIT_FAILURE);
