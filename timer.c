@@ -4,16 +4,19 @@
 #include <string.h>
 #include <sys/time.h>
 
-static int absolute = 0;
-static int relative = 0;
-static int buffered = 0;
+#if __STDC_VERSION__ >= 199901L
+#include <stdbool.h>
+#else
+typedef enum { false, true } bool;
+#endif
+
+static bool absolute = false;
+static bool relative = false;
+static bool buffered = false;
 static struct timeval t0;
-static int t0_initialized = 0;
+static int t0_initialized = false;
 
-/* ------------------------------------------------------------------ */
-
-static struct timeval diff(struct timeval left, struct timeval right)
-{
+static struct timeval diff(struct timeval left, struct timeval right) {
     struct timeval result;
 
     result.tv_sec = left.tv_sec - right.tv_sec;
@@ -25,19 +28,13 @@ static struct timeval diff(struct timeval left, struct timeval right)
     return result;
 }
 
-/* ------------------------------------------------------------------ */
-
-static void show_timeval(FILE *stream, struct timeval tv)
-{
+static void show_timeval(FILE *stream, struct timeval tv) {
     fprintf(stream, absolute ? "%10ld.%06ld" : "%8ld.%06ld",
                     (long)tv.tv_sec,
                     (long)tv.tv_usec);
 }
 
-/* ------------------------------------------------------------------ */
-
-static void show_time(FILE *stream, int real_time_too)
-{
+static void show_time(FILE *stream, int real_time_too) {
     struct timeval tv;
     int result = gettimeofday(&tv, NULL);
     if (result == 0) {
@@ -65,10 +62,7 @@ static void show_time(FILE *stream, int real_time_too)
     }
 } /* show_time */
 
-/* ------------------------------------------------------------------ */
-
-static void usage(char *prog_name, char *message)
-{
+static void usage(char *prog_name, char *message) {
     if (message != NULL) {
         puts(message);
     }
@@ -83,10 +77,7 @@ static void usage(char *prog_name, char *message)
     exit(EXIT_SUCCESS);
 } /* usage */
 
-/* ------------------------------------------------------------------ */
-
-int main(int argc, char **argv)
-{
+int main(int argc, char **argv) {
 #define LEN 8192
 
     char line[LEN];
@@ -96,19 +87,19 @@ int main(int argc, char **argv)
 
     for (i = 1; i < argc; i ++) {
         if (strcmp(argv[i], "-a") == 0) {
-            absolute = 1;
+            absolute = true;
         }
         else if (strcmp(argv[i], "-r") == 0) {
-            relative = 1;
+            relative = true;
         }
         else if (strcmp(argv[i], "-z") == 0) {
-            absolute = 0;
+            absolute = false;
         }
         else if (strcmp(argv[i], "-b") == 0) {
-            buffered = 1;
+            buffered = true;
         }
         else if (strcmp(argv[i], "-u") == 0) {
-            buffered = 0;
+            buffered = false;
         }
         else if (strcmp(argv[i], "-o") == 0) {
             if (i < argc-1) {
