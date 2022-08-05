@@ -40,10 +40,11 @@ of 1 billionth of a day or 86.4 microseconds.  (This doesn't imply
 *accuracy* to that level.)
 
 `timer` is more complex.  `timer -h` shows the following help message:
-
 ```
-Usage: timer [options]
+Usage: ./timer [options]
     -a : Absolute time (default is zero-based)
+    -A : Absolute local time, human-readable
+    -U : Absolute UTC time, human-readable
     -r : Show time interval relative to previous line
     -b : Buffered output (default is unbuffered)
     -h : Help (show this message and exit)

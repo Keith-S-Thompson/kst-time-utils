@@ -11,6 +11,8 @@ typedef enum { false, true } bool;
 #endif
 
 static bool absolute = false;
+static bool absolute_readable = false;
+static bool utc = false;
 static bool relative = false;
 static bool buffered = false;
 static struct timeval t0;
@@ -29,9 +31,20 @@ static struct timeval diff(struct timeval left, struct timeval right) {
 }
 
 static void show_timeval(FILE *stream, struct timeval tv) {
-    fprintf(stream, absolute ? "%10ld.%06ld" : "%8ld.%06ld",
-                    (long)tv.tv_sec,
-                    (long)tv.tv_usec);
+    if (absolute_readable) {
+        // YYYY-MM-DD-HH:MM:SS-mmmmmm
+        struct tm *ltime = (utc ? gmtime : localtime)(&tv.tv_sec);
+        char format[100];
+        sprintf(format, "%%F-%%T.%06ld", tv.tv_usec);
+        char buf[100];
+        strftime(buf, sizeof buf, format, ltime);
+        fputs(buf, stream);
+    }
+    else {
+        fprintf(stream, absolute ? "%10ld.%06ld" : "%8ld.%06ld",
+                        (long)tv.tv_sec,
+                        (long)tv.tv_usec);
+    }
 }
 
 static void show_time(FILE *stream, int real_time_too) {
@@ -42,7 +55,7 @@ static void show_time(FILE *stream, int real_time_too) {
             t0 = tv;
             t0_initialized = 1;
         }
-        if (absolute) {
+        if (absolute || absolute_readable) {
             show_timeval(stream, tv);
         }
         else {
@@ -68,6 +81,8 @@ static void usage(char *prog_name, char *message) {
     }
     printf("Usage: %s [options]\n", prog_name);
     puts("    -a : Absolute time (default is zero-based)");
+    puts("    -A : Absolute local time, human-readable");
+    puts("    -U : Absolute UTC time, human-readable");
     puts("    -r : Show time interval relative to previous line");
     puts("    -b : Buffered output (default is unbuffered)");
     puts("    -h : Help (show this message and exit)");
@@ -88,6 +103,14 @@ int main(int argc, char **argv) {
     for (i = 1; i < argc; i ++) {
         if (strcmp(argv[i], "-a") == 0) {
             absolute = true;
+        }
+        else if (strcmp(argv[i], "-A") == 0) {
+            absolute_readable = true;
+            utc = false;
+        }
+        else if (strcmp(argv[i], "-U") == 0) {
+            absolute_readable = true;
+            utc = true;
         }
         else if (strcmp(argv[i], "-r") == 0) {
             relative = true;
