@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stddef.h>
 #include <string.h>
+#include <time.h>
 #include <sys/time.h>
 
 #if __STDC_VERSION__ >= 199901L
