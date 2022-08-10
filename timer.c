@@ -36,7 +36,7 @@ static void show_timeval(FILE *stream, struct timeval tv) {
         // YYYY-MM-DD-HH:MM:SS-mmmmmm
         struct tm *ltime = (utc ? gmtime : localtime)(&tv.tv_sec);
         char format[100];
-        sprintf(format, "%%F-%%T.%06ld", tv.tv_usec);
+        sprintf(format, "%%F-%%T.%06ld%s", tv.tv_usec, utc ? "Z" : "");
         char buf[100];
         strftime(buf, sizeof buf, format, ltime);
         fputs(buf, stream);
