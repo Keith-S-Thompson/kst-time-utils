@@ -17,7 +17,7 @@ static bool utc = false;
 static bool relative = false;
 static bool buffered = false;
 static struct timeval t0;
-static int t0_initialized = false;
+static bool t0_initialized = false;
 
 static struct timeval diff(struct timeval left, struct timeval right) {
     struct timeval result;
@@ -48,13 +48,13 @@ static void show_timeval(FILE *stream, struct timeval tv) {
     }
 }
 
-static void show_time(FILE *stream, int real_time_too) {
+static void show_time(FILE *stream, bool real_time_too) {
     struct timeval tv;
     int result = gettimeofday(&tv, NULL);
     if (result == 0) {
         if (! t0_initialized) {
             t0 = tv;
-            t0_initialized = 1;
+            t0_initialized = true;
         }
         if (absolute || absolute_readable) {
             show_timeval(stream, tv);
@@ -74,9 +74,9 @@ static void show_time(FILE *stream, int real_time_too) {
     else {
         fprintf(stream, "---------.------");
     }
-} /* show_time */
+}
 
-static void usage(char *prog_name, char *message) {
+static void usage(const char *prog_name, const char *message) {
     if (message != NULL) {
         puts(message);
     }
@@ -161,15 +161,15 @@ int main(int argc, char **argv) {
         setbuf(output_file, NULL);
     }
 
-    show_time(output_file, 1);
+    show_time(output_file, true);
     putc('\n', output_file);
 
     while (fgets(line, LEN, stdin)) {
-        show_time(output_file, 0);
+        show_time(output_file, false);
         fprintf(output_file, " %s", line);
     }
 
-    show_time(output_file, 1);
+    show_time(output_file, true);
     putc('\n', output_file);
     
     if (output_file_name != NULL) {
