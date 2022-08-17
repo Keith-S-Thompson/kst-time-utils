@@ -1,19 +1,19 @@
 #define _XOPEN_SOURCE 500
 
-#include <unistd.h>
 #include <sys/time.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #define ONE_MILLION 1000000
 
 static void usage_error(const char *program_name) {
-    fprintf(stderr, "Usage: %s seconds\n", program_name);
+    fprintf(stderr, "Usage: %s seconds [command [args...]]\n", program_name);
     exit(EXIT_FAILURE);
 }
 
 int main(int argc, char **argv) {
-    if (argc != 2) {
+    if (argc < 2) {
         usage_error(argv[0]);
     }
     const int seconds = atoi(argv[1]);
@@ -32,4 +32,8 @@ int main(int argc, char **argv) {
     }
 
     usleep(ONE_MILLION * (useconds_t)sleep_seconds + sleep_useconds);
+
+    if (argc > 2) {
+        execvp(argv[2], argv+2);
+    }
 }

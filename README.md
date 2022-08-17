@@ -64,15 +64,19 @@ the UNIX epoch) of the specified number of seconds.  It uses
 (subject to the overhead of running the program).  Note that
 these functions are considered obsolete.  Consider using the
 `nanosleep-until` command instead.
+Optionally, it executes a command
+given on the command line after the `seconds` argument.
 
 ```
-Usage: usleep-until seconds
+Usage: usleep-until seconds [command [args...]]
 ```
 
-`nanosleep-until` sleeps until the next multiple (in seconds since
-the UNIX epoch) of the specified number of seconds.  It uses
+`nanosleep-until` sleeps until the next multiple (in seconds
+since the UNIX epoch) of the specified number of seconds.  It uses
 `clock_gettime()` and `nanosleep()` to provide nanosecond resolution
-(subject to the overhead of running the program).
+(subject to the overhead of running the program).  Optionally, it
+executes a command given on the command line after the `seconds`
+argument.
 
 The `seconds` argument is a positive integer.  Since `nanosleep-until`
 uses `atoi` to parse its argument, any fractional part is quietly
@@ -80,5 +84,5 @@ ignored; `nanosleep-until 1.5` acts like `nanosleep 1`.  (This is a
 bug, which I'll fix eventually.)
 
 ```
-Usage: nanosleep-until seconds
+Usage: nanosleep-until seconds [command [args...]]
 ```
