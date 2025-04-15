@@ -9,7 +9,6 @@
 /* #include <sys/time.h> */
 
 static bool show_res(clockid_t clk_id) {
-    // puts(">>> show_res");
     struct timespec ts = { 0, 0 };
     if (clock_getres(clk_id, &ts) == 0) {
         printf("%ld.%09ld\n", (long)ts.tv_sec, (long)ts.tv_nsec);
@@ -22,7 +21,6 @@ static bool show_res(clockid_t clk_id) {
 }
 
 static bool show_time(clockid_t clk_id) {
-    // puts(">>> show_time");
     struct timespec ts = { 0, 0 };
     if (clock_gettime(clk_id, &ts) == 0) {
         printf("%ld.%09ld\n", (long)ts.tv_sec, (long)ts.tv_nsec);
@@ -35,16 +33,20 @@ static bool show_time(clockid_t clk_id) {
 }
 
 static bool show(clockid_t clk_id, bool res) {
-    // puts(">>> show");
     return (res ? show_res : show_time)(clk_id);
 }
 
 static void usage(void) {
     puts("Usage: clock_gettime [options]");
     puts("  -r    CLOCK_REALTIME, system-wide real-time clock (default)");
+    puts("  -T    CLOCK_TAI, International Atomic Time (no leap seconds)");
+#ifndef CLOCK_TAI
+    puts("        CLOCK_TAI is not supported on this system");
+#endif
     puts("  -m    CLOCK_MONOTONIC, monotonic time since some unspecified starting point");
-#ifdef CLOCK_MONOTONIC_RAW
     puts("  -M    CLOCK_MONOTONIC_RAW, hardware-based timer with no ntp adjustments");
+#ifndef CLOCK_MONOTONIC_RAW
+    puts("        CLOCK_MONOTONIC_RAW is not supported on this system");
 #endif
     puts("  -p    CLOCK_PROCESS_CPUTIME_ID, high-resolution per-process timer from the CPU");
     puts("  -t    CLOCK_THREAD_CPUTIME_ID, thread-specific CPU-time clock");
@@ -63,13 +65,18 @@ int main(int argc, char **argv) {
         if (strlen(argv[i]) == 2 && argv[i][0] == '-') {
             switch (argv[i][1]) {
                 case 'R':
-                    // puts(">>> show_res = true");
                     show_res = true;
                     break;
                 case 'r':
                     ok = ok && show(CLOCK_REALTIME, show_res);
                     shown = true;
                     break;
+#ifdef CLOCK_TAI
+                case 'T':
+                    ok = ok && show(CLOCK_TAI, show_res);
+                    shown = true;
+                    break;
+#endif
                 case 'm':
                     ok = ok && show(CLOCK_MONOTONIC, show_res);
                     shown = true;

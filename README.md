@@ -22,12 +22,13 @@ Other options are as shown with `-h`:
 ```
 Usage: clock_gettime [options]
   -r    CLOCK_REALTIME, system-wide real-time clock (default)
+  -T    CLOCK_TAI, International Atomic Time (no leap seconds)
   -m    CLOCK_MONOTONIC, monotonic time since some unspecified starting point
   -M    CLOCK_MONOTONIC_RAW, hardware-based timer with no ntp adjustments
   -p    CLOCK_PROCESS_CPUTIME_ID, high-resolution per-process timer from the CPU
   -t    CLOCK_THREAD_CPUTIME_ID, thread-specific CPU-time clock
 (-p and -t are not particularly meaningful in this context.)
-  -R    Show resolution (calls clock_getres), may be followed by another option
+  -R    Show resolution (calls clock_getres), may be followed by other options
 Multiple arguments may be given
 ```
 
